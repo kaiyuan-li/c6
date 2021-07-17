@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  client:
+    image: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: c7_client_local
+    volumes:
+      - /tmp/client/npm-cache:/root/.npm:z
+      - ./client/src:/usr/src/app/src:z
+      - ./client/public:/usr/src/app/public:z
+    ports:
+      - "3000:3000"
+    restart: "no"
+    depends_on:
+      - server
+
+  server:
+    image: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: c7_server_local
+    volumes:
+      - /tmp/client/npm-cache:/root/.npm:z
+      - ./server/src:/usr/src/app/src:z
+    expose:
+      - "9000:80"
+    environment:
+      - PORT=80
+    restart: "no"
